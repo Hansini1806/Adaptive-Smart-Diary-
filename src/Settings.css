@@ -1,0 +1,845 @@
+.settings-page {
+  width: min(100%, 1230px);
+  margin: 0 auto;
+  padding: 39px 44px 36px;
+}
+
+.settings-page-heading h1 {
+  margin: 10px 0 5px;
+  color: #f0edf5;
+  font-size: 30px;
+  font-weight: 550;
+  letter-spacing: -0.9px;
+}
+
+.settings-page-heading p {
+  color: #9994a5;
+  font-size: 12px;
+}
+
+.settings-notice {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 10px;
+}
+
+.settings-notice.is-success {
+  border-color: rgba(112, 195, 145, 0.18);
+  background: rgba(75, 153, 106, 0.09);
+  color: #9ed0ae;
+}
+
+.settings-notice.is-error,
+.settings-inline-error {
+  border-color: rgba(224, 119, 119, 0.22);
+  background: rgba(168, 68, 68, 0.1);
+  color: #eaa4a4;
+}
+
+.settings-sections {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.settings-section {
+  min-width: 0;
+  padding: 16px 17px;
+  border: 1px solid #252430;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(22, 21, 31, 0.94), rgba(17, 17, 25, 0.96));
+  box-shadow: 0 7px 19px rgba(0, 0, 0, 0.07);
+}
+
+.settings-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.settings-section-icon {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(165, 121, 230, 0.12);
+  border-radius: 9px;
+  background: rgba(144, 95, 212, 0.13);
+  color: #ba96ee;
+}
+
+.settings-section-heading h2 {
+  margin: 0;
+  color: #e9e5ef;
+  font-size: 13px;
+  font-weight: 580;
+}
+
+.settings-section-heading p {
+  margin: 4px 0 0;
+  color: #888496;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.settings-section-content {
+  min-width: 0;
+  padding-left: 41px;
+}
+
+.settings-profile-view,
+.settings-profile-form {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.settings-profile-avatar {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(205, 170, 255, 0.32);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #8c63bf, #584079);
+  color: #f6efff;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(137, 98, 188, 0.09);
+}
+
+.settings-profile-details {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 3px;
+}
+
+.settings-profile-details strong {
+  color: #e9e5ef;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.settings-profile-details > span {
+  color: #aaa4b4;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.settings-profile-details p {
+  margin: 2px 0 0;
+  color: #858191;
+  font-size: 9px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.settings-secondary-button,
+.settings-danger-button,
+.settings-primary-button {
+  display: inline-flex;
+  min-height: 33px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid #302d39;
+  border-radius: 8px;
+  background: #191820;
+  color: #b5b0bf;
+  font-size: 9px;
+  font-weight: 550;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.settings-secondary-button:hover {
+  border-color: #59456e;
+  color: #d1b5f3;
+}
+
+.settings-profile-form {
+  align-items: flex-start;
+}
+
+.settings-profile-fields {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.settings-field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: #b9b4c3;
+  font-size: 9px;
+}
+
+.settings-field > span {
+  font-weight: 550;
+}
+
+.settings-field input,
+.settings-field textarea,
+.settings-field select {
+  width: 100%;
+  min-height: 35px;
+  padding: 8px 10px;
+  border: 1px solid #302e3b;
+  border-radius: 8px;
+  outline: 0;
+  background: rgba(18, 17, 26, 0.82);
+  color: #e9e5ef;
+  font: inherit;
+  font-size: 10px;
+  color-scheme: dark;
+}
+
+.settings-field select {
+  appearance: auto;
+}
+
+.settings-field textarea {
+  min-height: 57px;
+  resize: vertical;
+}
+
+.settings-field input:focus,
+.settings-field textarea:focus,
+.settings-field select:focus {
+  border-color: rgba(167, 125, 227, 0.65);
+  box-shadow: 0 0 0 3px rgba(137, 93, 194, 0.1);
+}
+
+.settings-field input::placeholder,
+.settings-field textarea::placeholder {
+  color: #777385;
+}
+
+.settings-field-wide {
+  grid-column: 1 / -1;
+}
+
+.settings-form-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.settings-primary-button {
+  border-color: rgba(208, 180, 255, 0.2);
+  background: linear-gradient(110deg, #8853dc, #6d42ba 58%, #6540ac);
+  color: #fff;
+}
+
+.settings-primary-button:hover {
+  filter: brightness(1.1);
+}
+
+.settings-theme-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.settings-theme-option {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 9px;
+  border: 1px solid #302d39;
+  border-radius: 9px;
+  background: rgba(18, 17, 25, 0.58);
+  color: #bdb8c7;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settings-theme-option:hover {
+  border-color: #51415f;
+}
+
+.settings-theme-option.is-selected {
+  border-color: rgba(174, 132, 231, 0.62);
+  background: rgba(126, 79, 178, 0.11);
+  box-shadow: 0 0 0 2px rgba(137, 93, 194, 0.08);
+}
+
+.settings-theme-preview {
+  display: grid;
+  width: 65px;
+  height: 43px;
+  flex: 0 0 auto;
+  align-content: start;
+  gap: 4px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.settings-theme-preview > span {
+  display: block;
+  width: 100%;
+  height: 5px;
+  border-radius: 3px;
+}
+
+.theme-preview-dark {
+  background: #11111b;
+}
+
+.theme-preview-dark > span:first-child {
+  width: 45%;
+  background: #a87bdb;
+}
+
+.theme-preview-dark > span:nth-child(2) {
+  background: #292634;
+}
+
+.theme-preview-dark > span:nth-child(3) {
+  width: 68%;
+  background: #383044;
+}
+
+.theme-preview-light {
+  border-color: #d7d1e0;
+  background: #faf9fc;
+}
+
+.theme-preview-light > span:first-child {
+  width: 45%;
+  background: #8658b5;
+}
+
+.theme-preview-light > span:nth-child(2) {
+  background: #e7e2ed;
+}
+
+.theme-preview-light > span:nth-child(3) {
+  width: 68%;
+  background: #d8cde5;
+}
+
+.settings-theme-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 4px;
+}
+
+.settings-theme-copy strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ddd8e6;
+  font-size: 10px;
+}
+
+.settings-theme-copy small {
+  color: #858191;
+  font-size: 8px;
+}
+
+.settings-radio-indicator {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+  border: 1px solid #5a5365;
+  border-radius: 50%;
+}
+
+.settings-theme-option.is-selected .settings-radio-indicator {
+  border: 4px solid #aa7ce3;
+  background: #18151f;
+}
+
+.settings-option-list {
+  display: grid;
+}
+
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.settings-toggle-row:first-child {
+  padding-top: 0;
+}
+
+.settings-toggle-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.settings-toggle-row strong {
+  color: #d7d2df;
+  font-size: 10px;
+  font-weight: 550;
+}
+
+.settings-toggle-row p {
+  margin: 4px 0 0;
+  color: #858191;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.settings-switch {
+  display: flex;
+  width: 37px;
+  height: 21px;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid #393542;
+  border-radius: 999px;
+  background: #24212c;
+  cursor: pointer;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.settings-switch > span {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #aaa4b4;
+  transition: transform 150ms ease, background 150ms ease;
+}
+
+.settings-switch.is-on {
+  border-color: #8456b7;
+  background: #7547a8;
+}
+
+.settings-switch.is-on > span {
+  transform: translateX(16px);
+  background: #fff;
+}
+
+.settings-helper-text {
+  margin: 11px 0 0;
+  color: #777383;
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.settings-preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.settings-privacy-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 11px;
+  border: 1px solid rgba(121, 173, 141, 0.13);
+  border-radius: 8px;
+  background: rgba(74, 128, 91, 0.07);
+  color: #93c2a0;
+}
+
+.settings-privacy-callout svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.settings-privacy-callout p {
+  margin: 0;
+  color: #aaa8b1;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.settings-inline-error {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border: 1px solid;
+  border-radius: 8px;
+  font-size: 9px;
+}
+
+.settings-data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.settings-danger-button {
+  border-color: rgba(204, 107, 107, 0.25);
+  background: rgba(125, 47, 54, 0.12);
+  color: #d99a9d;
+}
+
+.settings-danger-button:hover {
+  border-color: rgba(219, 116, 116, 0.45);
+  background: rgba(139, 54, 61, 0.2);
+  color: #edb0b2;
+}
+
+.settings-reset-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.settings-reset-row p {
+  max-width: 550px;
+  margin: 0;
+  color: #9994a5;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+@media (max-width: 1000px) {
+  .settings-page {
+    padding-right: 28px;
+    padding-left: 28px;
+  }
+}
+
+@media (max-width: 760px) {
+  .settings-page {
+    padding: 28px 19px;
+  }
+
+  .settings-section-content {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .settings-page {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .settings-section {
+    padding: 13px;
+  }
+
+  .settings-profile-view {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .settings-profile-view .settings-secondary-button {
+    margin-left: 61px;
+  }
+
+  .settings-profile-form {
+    flex-direction: column;
+  }
+
+  .settings-profile-fields,
+  .settings-preferences-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-field-wide,
+  .settings-form-actions {
+    grid-column: auto;
+  }
+
+  .settings-theme-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-reset-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.app-shell[data-theme='light'] {
+  color: #302a3a;
+  background: radial-gradient(ellipse at 76% -15%, rgba(137, 91, 194, 0.1), transparent 36%), #f5f3f8;
+  color-scheme: light;
+}
+
+.app-shell[data-theme='light'] .sidebar {
+  border-color: #e2deea;
+  background: #fbfaff;
+  box-shadow: 5px 0 22px rgba(47, 35, 67, 0.035);
+}
+
+.app-shell[data-theme='light'] .brand-copy strong,
+.app-shell[data-theme='light'] .mobile-brand strong,
+.app-shell[data-theme='light'] .profile-greeting strong,
+.app-shell[data-theme='light'] .settings-section-heading h2,
+.app-shell[data-theme='light'] .settings-profile-details strong,
+.app-shell[data-theme='light'] .settings-theme-copy strong {
+  color: #342d40;
+}
+
+.app-shell[data-theme='light'] .brand-copy > span,
+.app-shell[data-theme='light'] .sidebar-footer,
+.app-shell[data-theme='light'] .profile-greeting > span,
+.app-shell[data-theme='light'] .date-time {
+  color: #777181;
+}
+
+.app-shell[data-theme='light'] .navigation-item {
+  color: #716b7d;
+}
+
+.app-shell[data-theme='light'] .navigation-item:hover {
+  background: #f1edf7;
+  color: #493d5c;
+}
+
+.app-shell[data-theme='light'] .navigation-item.is-active {
+  border-color: rgba(127, 79, 180, 0.16);
+  background: linear-gradient(90deg, rgba(129, 81, 200, 0.14), rgba(112, 73, 170, 0.045));
+  color: #674294;
+}
+
+.app-shell[data-theme='light'] .streak-card,
+.app-shell[data-theme='light'] .mood-summary-card,
+.app-shell[data-theme='light'] .settings-section,
+.app-shell[data-theme='light'] .goal-stat-card,
+.app-shell[data-theme='light'] .goal-card,
+.app-shell[data-theme='light'] .stat-card,
+.app-shell[data-theme='light'] .entry-card,
+.app-shell[data-theme='light'] .saved-entry-card,
+.app-shell[data-theme='light'] .mood-overview-card,
+.app-shell[data-theme='light'] .mood-tracker-panel,
+.app-shell[data-theme='light'] .mood-history-entry,
+.app-shell[data-theme='light'] .insight-stat-card,
+.app-shell[data-theme='light'] .insights-panel,
+.app-shell[data-theme='light'] .writing-insight-card,
+.app-shell[data-theme='light'] .calendar-card,
+.app-shell[data-theme='light'] .editor-card,
+.app-shell[data-theme='light'] .assistant-panel,
+.app-shell[data-theme='light'] .assistant-chat-card,
+.app-shell[data-theme='light'] .assistant-quick-panel,
+.app-shell[data-theme='light'] .placeholder-card {
+  border-color: #e3dfea;
+  background: linear-gradient(145deg, #fff, #faf9fc);
+  box-shadow: 0 7px 20px rgba(47, 35, 67, 0.045);
+}
+
+.app-shell[data-theme='light'] .topbar {
+  border-bottom-color: #e5e1eb;
+}
+
+.app-shell[data-theme='light'] input,
+.app-shell[data-theme='light'] textarea,
+.app-shell[data-theme='light'] select {
+  border-color: #ddd8e5;
+  background-color: #fff;
+  color: #423b4d;
+  color-scheme: light;
+}
+
+.app-shell[data-theme='light'] .icon-button,
+.app-shell[data-theme='light'] .settings-theme-option,
+.app-shell[data-theme='light'] .settings-field input,
+.app-shell[data-theme='light'] .settings-field textarea,
+.app-shell[data-theme='light'] .settings-field select,
+.app-shell[data-theme='light'] .settings-form-field input,
+.app-shell[data-theme='light'] .settings-form-field textarea,
+.app-shell[data-theme='light'] .entries-toolbar,
+.app-shell[data-theme='light'] .entries-search,
+.app-shell[data-theme='light'] .entries-filter select,
+.app-shell[data-theme='light'] .goal-progress-controls,
+.app-shell[data-theme='light'] .goal-filter-tabs,
+.app-shell[data-theme='light'] .assistant-composer,
+.app-shell[data-theme='light'] .assistant-quick-action,
+.app-shell[data-theme='light'] .chat-message-body,
+.app-shell[data-theme='light'] .new-entry-field input,
+.app-shell[data-theme='light'] .new-entry-field textarea,
+.app-shell[data-theme='light'] .new-entry-field select {
+  border-color: #ddd8e5;
+  background: #fff;
+  color: #423b4d;
+  color-scheme: light;
+}
+
+.app-shell[data-theme='light'] h1,
+.app-shell[data-theme='light'] h2,
+.app-shell[data-theme='light'] h3,
+.app-shell[data-theme='light'] .calendar-header h2,
+.app-shell[data-theme='light'] .insights-section-heading h2,
+.app-shell[data-theme='light'] .insights-panel-heading h2,
+.app-shell[data-theme='light'] .mood-section-heading h2,
+.app-shell[data-theme='light'] .mood-history-heading h2,
+.app-shell[data-theme='light'] .assistant-chat-card-heading h2,
+.app-shell[data-theme='light'] .entry-card h3,
+.app-shell[data-theme='light'] .saved-entry-card h3,
+.app-shell[data-theme='light'] .goal-card h3,
+.app-shell[data-theme='light'] .welcome-copy h1,
+.app-shell[data-theme='light'] .section-heading h2,
+.app-shell[data-theme='light'] .entries-page-heading h1,
+.app-shell[data-theme='light'] .calendar-page-heading h1,
+.app-shell[data-theme='light'] .insights-page-heading h1,
+.app-shell[data-theme='light'] .mood-tracker-heading h1,
+.app-shell[data-theme='light'] .assistant-page-heading h1,
+.app-shell[data-theme='light'] .goals-page-heading h1,
+.app-shell[data-theme='light'] .settings-page-heading h1 {
+  color: #332c3d;
+}
+
+.app-shell[data-theme='light'] p,
+.app-shell[data-theme='light'] .section-heading p,
+.app-shell[data-theme='light'] .entries-page-heading p,
+.app-shell[data-theme='light'] .calendar-page-heading p,
+.app-shell[data-theme='light'] .insights-page-heading p,
+.app-shell[data-theme='light'] .mood-tracker-heading p,
+.app-shell[data-theme='light'] .assistant-page-heading p,
+.app-shell[data-theme='light'] .goals-page-heading p,
+.app-shell[data-theme='light'] .settings-page-heading p,
+.app-shell[data-theme='light'] .settings-section-heading p,
+.app-shell[data-theme='light'] .settings-profile-details p,
+.app-shell[data-theme='light'] .settings-theme-copy small,
+.app-shell[data-theme='light'] .settings-toggle-row p,
+.app-shell[data-theme='light'] .settings-helper-text,
+.app-shell[data-theme='light'] .saved-entry-preview,
+.app-shell[data-theme='light'] .assistant-chat-card-heading p,
+.app-shell[data-theme='light'] .chat-message-body p {
+  color: #726c7d;
+}
+
+.app-shell[data-theme='light'] .welcome-section {
+  border-color: rgba(123, 81, 171, 0.2);
+  background:
+    radial-gradient(ellipse at 80% 50%, rgba(150, 106, 201, 0.14), transparent 35%),
+    linear-gradient(110deg, #fff, #f8f5fc 65%, #f3eef9);
+  box-shadow: 0 13px 32px rgba(47, 35, 67, 0.06);
+}
+
+.app-shell[data-theme='light'] .welcome-section p {
+  color: #6f687a;
+}
+
+.app-shell[data-theme='light'] .welcome-section h1 span {
+  color: #8050af;
+}
+
+.app-shell[data-theme='light'] .calendar-day {
+  border-color: #e6e1ec;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.app-shell[data-theme='light'] .calendar-day.is-other-month {
+  background: rgba(238, 235, 243, 0.65);
+}
+
+.app-shell[data-theme='light'] .calendar-day-number,
+.app-shell[data-theme='light'] .calendar-day-name,
+.app-shell[data-theme='light'] .calendar-header h2,
+.app-shell[data-theme='light'] .goal-progress-count strong {
+  color: #433b4d;
+}
+
+.app-shell[data-theme='light'] .calendar-controls button,
+.app-shell[data-theme='light'] .calendar-day-panel,
+.app-shell[data-theme='light'] .entry-detail-dialog,
+.app-shell[data-theme='light'] .goal-progress-controls button {
+  border-color: #ddd8e5;
+  background: #fff;
+  color: #514a5c;
+}
+
+.app-shell[data-theme='light'] .entry-meta,
+.app-shell[data-theme='light'] .saved-entry-meta,
+.app-shell[data-theme='light'] .goal-date-line,
+.app-shell[data-theme='light'] .goal-completed-note,
+.app-shell[data-theme='light'] .mood-history-entry {
+  border-color: #ece8f0;
+}
+
+.app-shell[data-theme='light'] .goal-progress-track,
+.app-shell[data-theme='light'] .mood-progress-track {
+  background: #e9e4ee;
+}
+
+.app-shell[data-theme='light'] .settings-field input::placeholder,
+.app-shell[data-theme='light'] .settings-field textarea::placeholder,
+.app-shell[data-theme='light'] input::placeholder,
+.app-shell[data-theme='light'] textarea::placeholder {
+  color: #8b8494;
+}
+
+.app-shell[data-theme='light'] .settings-field,
+.app-shell[data-theme='light'] .settings-toggle-row strong,
+.app-shell[data-theme='light'] .settings-profile-details > span,
+.app-shell[data-theme='light'] .settings-theme-option,
+.app-shell[data-theme='light'] .goal-progress-count,
+.app-shell[data-theme='light'] .goal-progress-label,
+.app-shell[data-theme='light'] .saved-entry-meta,
+.app-shell[data-theme='light'] .assistant-quick-action,
+.app-shell[data-theme='light'] .stat-value-row strong,
+.app-shell[data-theme='light'] .insight-stat-value,
+.app-shell[data-theme='light'] .mood-overview-card > strong,
+.app-shell[data-theme='light'] .mood-overview-summary strong,
+.app-shell[data-theme='light'] .goal-stat-card > strong {
+  color: #514a5c;
+}
+
+.app-shell[data-theme='light'] .goal-card-completed {
+  border-color: rgba(92, 151, 108, 0.25);
+  background: linear-gradient(145deg, #fbfffc, #f4faf5);
+}
+
+.app-shell[data-theme='light'] .assistant-conversation {
+  background: #fdfcff;
+}
+
+.app-shell[data-theme='light'] .message-user .chat-message-body {
+  border-color: rgba(139, 91, 201, 0.25);
+  background: #f2eafb;
+}
+
+.app-shell[data-theme='light'] .message-user .chat-message-body p,
+.app-shell[data-theme='light'] .message-user .chat-message-author {
+  color: #49335f;
+}
+
+.app-shell[data-theme='light'] .settings-empty-state,
+.app-shell[data-theme='light'] .goals-empty-state,
+.app-shell[data-theme='light'] .entries-empty-state,
+.app-shell[data-theme='light'] .mood-empty-state,
+.app-shell[data-theme='light'] .insights-empty-state {
+  border-color: #ddd7e6;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.app-shell[data-theme='light'] .settings-switch {
+  border-color: #d0cad9;
+  background: #e5e1e9;
+}
+
+.app-shell[data-theme='light'] .settings-switch.is-on {
+  border-color: #8456b7;
+  background: #7547a8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-theme-option,
+  .settings-switch,
+  .settings-switch > span {
+    transition: none;
+  }
+}
