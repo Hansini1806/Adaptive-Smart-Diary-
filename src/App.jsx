@@ -36,6 +36,7 @@ import {
   Sun,
   UserRound,
   ShieldCheck,
+  LogOut,
   Underline,
   WandSparkles,
 } from 'lucide-react'
@@ -56,6 +57,12 @@ import {
   resetSettings,
   saveSettings,
 } from './settingsStorage.js'
+import AuthPages from './AuthPages.jsx'
+import {
+  clearCurrentUserDiaryData,
+  getScopedStorageKey,
+  setActiveUserId,
+} from './accountStorage.js'
 
 const navigationItems = [
   { label: 'Home', icon: House, path: '/' },
@@ -90,73 +97,6 @@ const placeholderPages = {
     icon: Heart,
   },
 }
-
-const recentEntries = [
-  {
-    title: 'A little more present',
-    excerpt:
-      'Today felt lighter than usual. I took a longer walk after lunch and let myself enjoy the quiet...',
-    date: 'Today',
-    time: '6:42 PM',
-    mood: 'Grateful',
-    moodColor: 'lavender',
-    category: 'Personal growth',
-    icon: Sparkles,
-  },
-  {
-    title: 'Finding my rhythm',
-    excerpt:
-      'I finally made space for the things I have been putting off. Small steps are still steps forward.',
-    date: 'Yesterday',
-    time: '9:18 PM',
-    mood: 'Calm',
-    moodColor: 'blue',
-    category: 'Daily reflection',
-    icon: Clock3,
-  },
-  {
-    title: 'A moment worth keeping',
-    excerpt:
-      'Dinner with everyone around the table reminded me how much I have to be thankful for.',
-    date: 'Oct 4',
-    time: '8:05 PM',
-    mood: 'Happy',
-    moodColor: 'pink',
-    category: 'Memories',
-    icon: Heart,
-  },
-]
-
-const statistics = [
-  {
-    label: 'Entries this month',
-    value: '18',
-    detail: '+4 from last month',
-    icon: NotebookPen,
-    color: 'violet',
-  },
-  {
-    label: 'Days journaled',
-    value: '24',
-    detail: 'You’re building a habit',
-    icon: CalendarDays,
-    color: 'blue',
-  },
-  {
-    label: 'Average mood',
-    value: '8.6',
-    detail: 'Looking brighter lately',
-    icon: Heart,
-    color: 'pink',
-  },
-  {
-    label: 'Current streak',
-    value: '7 days',
-    detail: 'Your best is 12 days',
-    icon: Flame,
-    color: 'orange',
-  },
-]
 
 function getDateTime() {
   const now = new Date()
@@ -230,14 +170,14 @@ function Sidebar({ currentPage, onNavigate, onNewEntry }) {
           <div className="widget-heading">
             <span className="widget-icon streak-icon"><Flame size={17} /></span>
             <span id="streak-title">Daily Streak</span>
-            <span className="streak-count">7</span>
+            <span className="streak-count">0</span>
           </div>
-          <p className="streak-message">7 days in a row!</p>
-          <div className="streak-days" aria-label="Journaled every day this week">
+          <p className="streak-message">Your journaling streak starts here.</p>
+          <div className="streak-days" aria-label="Your weekly journaling activity">
             {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, index) => (
-              <span className="streak-day is-complete" key={`${day}-${index}`}>
+              <span className="streak-day" key={`${day}-${index}`}>
                 <span>{day}</span>
-                <span className="day-check">✓</span>
+                <span className="day-check" />
               </span>
             ))}
           </div>
@@ -248,9 +188,9 @@ function Sidebar({ currentPage, onNavigate, onNewEntry }) {
             <span className="widget-icon mood-icon"><Sparkles size={16} /></span>
             <span id="mood-summary-title">AI Mood Summary</span>
           </div>
-          <p>You&apos;ve been feeling positive lately!</p>
+          <p>Your mood reflections will appear here as you journal.</p>
           <div className="mood-summary-footer">
-            <span><span className="mood-indicator" /> Your week is trending up</span>
+            <span><span className="mood-indicator" /> Ready when you are</span>
             <ChevronRight size={15} />
           </div>
         </section>
@@ -264,9 +204,9 @@ function Sidebar({ currentPage, onNavigate, onNewEntry }) {
   )
 }
 
-function Topbar({ dateTime, profile }) {
-  const profileName = profile.name.trim() || 'Hansini'
-  const profileInitial = [...profileName][0]?.toUpperCase() || 'H'
+function Topbar({ dateTime, profile, onLogout }) {
+  const profileName = profile.name.trim()
+  const profileInitial = [...profileName][0]?.toUpperCase() || '?'
   return (
     <header className="topbar">
       <div className="mobile-brand">
@@ -283,11 +223,14 @@ function Topbar({ dateTime, profile }) {
         <Bell size={19} strokeWidth={1.8} />
         <span className="notification-dot" />
       </button>
-      <div className="profile-avatar" aria-label={`${profileName}'s profile`}>{profileInitial}</div>
+      <div className="profile-avatar" aria-label={profileName ? `${profileName}'s profile` : 'User profile'}>{profileInitial}</div>
       <div className="profile-greeting">
-        <strong>{dateTime.greeting}, {profileName} <span aria-hidden="true">👋</span></strong>
+        <strong>{profileName ? `${dateTime.greeting}, ${profileName}` : 'Welcome back'} <span aria-hidden="true">👋</span></strong>
         <span>Good to see you again</span>
       </div>
+      <button className="icon-button logout-button" type="button" aria-label="Log out" title="Log out" onClick={onLogout}>
+        <LogOut size={17} strokeWidth={1.8} />
+      </button>
     </header>
   )
 }
@@ -1491,7 +1434,8 @@ function AssistantMessage({ message, onNewEntry }) {
   )
 }
 
-function AIAssistantPage({ onNewEntry, profileName = 'Hansini' }) {
+function AIAssistantPage({ onNewEntry, profileName = '' }) {
+  const assistantName = profileName.trim() || 'there'
   const [entryState, setEntryState] = useState(() => {
     try {
       return { entries: getEntries(), error: '' }
@@ -1505,7 +1449,7 @@ function AIAssistantPage({ onNewEntry, profileName = 'Hansini' }) {
     {
       id: 'welcome',
       role: 'assistant',
-      text: `Hi ${profileName}! I’m your personal journaling companion. Ask me about your diary, explore a feeling, or find a gentle prompt to get started.`,
+      text: `Hi ${assistantName}! I’m your personal journaling companion. Ask me about your diary, explore a feeling, or find a gentle prompt to get started.`,
     },
   ])
   const [draftMessage, setDraftMessage] = useState('')
@@ -1620,7 +1564,7 @@ function AIAssistantPage({ onNewEntry, profileName = 'Hansini' }) {
                 setMessages([{
                   id: `welcome-${Date.now()}`,
                   role: 'assistant',
-                  text: `Hi ${profileName}! I’m your personal journaling companion. Ask me about your diary, explore a feeling, or find a gentle prompt to get started.`,
+                  text: `Hi ${assistantName}! I’m your personal journaling companion. Ask me about your diary, explore a feeling, or find a gentle prompt to get started.`,
                 }])
                 setAwaitingWriting(false)
               }}
@@ -2523,7 +2467,7 @@ function GoalsPage() {
 
   useEffect(() => {
     const handleStorage = (event) => {
-      if (event.key !== 'ai-smart-diary.goals' && event.key !== null) return
+      if (event.key !== getScopedStorageKey('ai-smart-diary.goals') && event.key !== null) return
       try {
         setGoalState({ goals: getGoals(), loadError: '' })
       } catch (error) {
@@ -2932,14 +2876,7 @@ function SettingsPage({ settings, onSaveSettings, onResetSettings, storageError 
     if (!confirmed) return
 
     try {
-      window.localStorage.removeItem('ai-smart-diary.entries')
-      window.localStorage.removeItem('ai-smart-diary.goals')
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'ai-smart-diary.entries',
-      }))
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: 'ai-smart-diary.goals',
-      }))
+      clearCurrentUserDiaryData()
       setNotice({ type: 'success', text: 'Diary entries and goals were cleared.' })
     } catch (error) {
       const message =
@@ -3003,7 +2940,7 @@ function SettingsPage({ settings, onSaveSettings, onResetSettings, storageError 
                 {Array.from(profileName)[0]?.toUpperCase() || 'H'}
               </span>
               <div className="settings-profile-details">
-                <strong>{formSettings.profile.name || 'Hansini'}</strong>
+                <strong>{formSettings.profile.name || 'Your name'}</strong>
                 <span>{formSettings.profile.email || 'No email added'}</span>
                 <p>{formSettings.profile.bio || 'Add a short bio to introduce yourself.'}</p>
               </div>
@@ -3032,8 +2969,7 @@ function SettingsPage({ settings, onSaveSettings, onResetSettings, storageError 
                     autoFocus
                     maxLength={80}
                     value={profileDraft.name}
-                    onChange={(event) => setProfileDraft((current) => ({ ...current, name: event.target.value }))}
-                    required
+                    readOnly
                   />
                 </label>
                 <label className="settings-field">
@@ -3042,8 +2978,7 @@ function SettingsPage({ settings, onSaveSettings, onResetSettings, storageError 
                     type="email"
                     maxLength={160}
                     value={profileDraft.email}
-                    onChange={(event) => setProfileDraft((current) => ({ ...current, email: event.target.value }))}
-                    placeholder="you@example.com"
+                    readOnly
                   />
                 </label>
                 <label className="settings-field settings-field-wide">
@@ -3224,26 +3159,31 @@ function PlaceholderPage({ page }) {
   )
 }
 
+function getPathForUser(user, pathname) {
+  const isAuthPath = pathname === '/login' || pathname === '/signup'
+  return user ? (isAuthPath ? '/' : pathname) : (isAuthPath ? pathname : '/login')
+}
+
 function App() {
   const [dateTime, setDateTime] = useState(getDateTime)
+  const [user, setUser] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [authError, setAuthError] = useState('')
   const [pathname, setPathname] = useState(window.location.pathname)
   const [entryToEdit, setEntryToEdit] = useState(null)
   const [selectedEntryDate, setSelectedEntryDate] = useState(null)
-  const [settingsState, setSettingsState] = useState(() => {
-    try {
-      return { settings: getSettings(), error: '' }
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'An unknown storage error occurred.'
-      return { settings: structuredClone(defaultSettings), error: message }
-    }
-  })
+  const [settingsState, setSettingsState] = useState(() => ({
+    settings: structuredClone(defaultSettings),
+    error: '',
+  }))
+  const [dashboardData, setDashboardData] = useState({ entries: [], error: '' })
   const { settings } = settingsState
 
   const navigate = (path) => {
-    if (window.location.pathname === path) return
-    window.history.pushState({}, '', path)
-    setPathname(path)
+    const safePath = getPathForUser(user, path)
+    if (window.location.pathname === safePath) return
+    window.history.pushState({}, '', safePath)
+    setPathname(safePath)
     window.scrollTo(0, 0)
   }
 
@@ -3253,10 +3193,111 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const handlePopState = () => setPathname(window.location.pathname)
+    const handlePopState = () => {
+      const pathnameFromHistory = window.location.pathname
+      const safePath = getPathForUser(user, pathnameFromHistory)
+      if (safePath !== pathnameFromHistory) window.history.replaceState({}, '', safePath)
+      setPathname(safePath)
+    }
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
+  }, [user])
+
+  useEffect(() => {
+    let cancelled = false
+    let unsubscribe
+
+    import('./supabaseAuth.js')
+      .then(({ subscribeToAuthChanges }) => {
+        if (cancelled) return
+        unsubscribe = subscribeToAuthChanges((authenticatedUser) => {
+          setAuthError('')
+          setActiveUserId(authenticatedUser?.id ?? null)
+          setUser(authenticatedUser)
+          setSettingsState(() => {
+            if (!authenticatedUser) {
+              return { settings: structuredClone(defaultSettings), error: '' }
+            }
+            try {
+              return { settings: getSettings(), error: '' }
+            } catch (error) {
+              const message =
+                error instanceof Error ? error.message : 'An unknown storage error occurred.'
+              return { settings: structuredClone(defaultSettings), error: message }
+            }
+          })
+          const safePath = getPathForUser(authenticatedUser, window.location.pathname)
+          if (safePath !== window.location.pathname) {
+            window.history.replaceState({}, '', safePath)
+            setPathname(safePath)
+          }
+          setAuthLoading(false)
+        })
+      })
+      .catch((error) => {
+        if (cancelled) return
+        setAuthError(error instanceof Error ? error.message : 'Could not initialize Supabase authentication.')
+        setAuthLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+      unsubscribe?.()
+    }
   }, [])
+
+  useEffect(() => {
+    if (!user) return undefined
+
+    const refreshDashboardData = () => {
+      try {
+        setDashboardData({ entries: getEntries(), error: '' })
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : 'An unknown storage error occurred.'
+        setDashboardData((current) => ({
+          ...current,
+          error: `Could not load your dashboard data: ${message}`,
+        }))
+      }
+    }
+    refreshDashboardData()
+    window.addEventListener('storage', refreshDashboardData)
+    return () => window.removeEventListener('storage', refreshDashboardData)
+  }, [pathname, user])
+
+  const handleSignUp = async (details) => {
+    const { signUp } = await import('./supabaseAuth.js')
+    return signUp(details)
+  }
+  const handleLogIn = async (credentials) => {
+    const { logIn } = await import('./supabaseAuth.js')
+    return logIn(credentials)
+  }
+  const handleLogOut = async () => {
+    const { logOut } = await import('./supabaseAuth.js')
+    try {
+      await logOut()
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Could not log out. Please try again.')
+    }
+  }
+
+  if (authLoading) {
+    return <main className="auth-page"><p className="auth-loading">Checking your session…</p></main>
+  }
+
+  if (!user || pathname === '/login' || pathname === '/signup') {
+    return (
+      <AuthPages
+        mode={pathname === '/signup' ? 'signup' : 'login'}
+        onNavigate={navigate}
+        onLogin={handleLogIn}
+        onSignup={handleSignUp}
+        initialError={authError}
+      />
+    )
+  }
 
   const isNewEntryPage = pathname === '/diary/new'
   const openNewEntry = (dateKey = null) => {
@@ -3270,15 +3311,86 @@ function App() {
     navigate('/diary/new')
   }
   const handleSaveSettings = (nextSettings) => {
-    const savedSettings = saveSettings(nextSettings)
+    const savedSettings = saveSettings({
+      ...nextSettings,
+      profile: {
+        ...nextSettings.profile,
+        name: user.name,
+        email: user.email,
+      },
+    })
     setSettingsState({ settings: savedSettings, error: '' })
     return savedSettings
   }
   const handleResetSettings = () => {
-    const reset = resetSettings()
-    setSettingsState({ settings: reset, error: '' })
-    return reset
+    const reset = resetSettings({ name: user.name, email: user.email, bio: '' })
+    const saved = saveSettings(reset)
+    setSettingsState({ settings: saved, error: '' })
+    return saved
   }
+  const profile = {
+    ...settings.profile,
+    name: user.name,
+    email: user.email,
+  }
+  const entries = dashboardData.entries
+  const today = new Date()
+  const entriesThisMonth = entries.filter((entry) => {
+    const date = parseEntryDate(entry.date ?? entry.createdAt)
+    return date && date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth()
+  }).length
+  const journaledDays = new Set(entries
+    .map((entry) => parseEntryDate(entry.date ?? entry.createdAt))
+    .filter(Boolean)
+    .map((date) => getLocalDateKey(date))).size
+  const moodScores = { Great: 5, Good: 4, Okay: 3, Tired: 2, Sad: 1, Stressed: 1 }
+  const recordedMoodScores = entries
+    .map((entry) => moodScores[entry.mood])
+    .filter((score) => Number.isFinite(score))
+  const averageMood = recordedMoodScores.length
+    ? `${(recordedMoodScores.reduce((total, score) => total + score, 0) / recordedMoodScores.length).toFixed(1)}/5`
+    : '—'
+  const streak = getInsightData(entries).streak
+  const statistics = [
+    { label: 'Entries this month', value: String(entriesThisMonth), detail: 'Your reflections this month', icon: NotebookPen, color: 'violet' },
+    { label: 'Days journaled', value: String(journaledDays), detail: 'Days with a saved entry', icon: CalendarDays, color: 'blue' },
+    { label: 'Average mood', value: averageMood, detail: 'Based on your mood entries', icon: Heart, color: 'pink' },
+    { label: 'Current streak', value: `${streak} ${streak === 1 ? 'day' : 'days'}`, detail: 'Consecutive days journaled', icon: Flame, color: 'orange' },
+  ]
+  const recentDashboardEntries = [...entries]
+    .sort((first, second) =>
+      (second.updatedAt ?? second.createdAt ?? '')
+        .localeCompare(first.updatedAt ?? first.createdAt ?? ''),
+    )
+    .slice(0, 3)
+    .map((entry) => {
+      const timestamp = entry.updatedAt ?? entry.createdAt
+      const parsedDate = parseEntryDate(entry.date ?? timestamp)
+      const moodColor = {
+        Great: 'lavender',
+        Good: 'blue',
+        Okay: 'blue',
+        Tired: 'orange',
+        Sad: 'pink',
+        Stressed: 'pink',
+      }[entry.mood] ?? 'lavender'
+      const excerpt = (entry.content ?? '').trim().replace(/\s+/g, ' ')
+      return {
+        ...entry,
+        title: entry.title?.trim() || 'Untitled entry',
+        excerpt: excerpt.length > 150 ? `${excerpt.slice(0, 147)}...` : excerpt || 'No written reflection.',
+        date: parsedDate
+          ? new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsedDate)
+          : 'Recently',
+        time: timestamp && !Number.isNaN(Date.parse(timestamp))
+          ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(timestamp))
+          : '',
+        mood: entry.mood || 'No mood',
+        moodColor,
+        category: entry.category || 'Reflection',
+        icon: NotebookPen,
+      }
+    })
   const placeholderPage = placeholderPages[pathname]
   const currentPage = isNewEntryPage
     ? 'Entries'
@@ -3292,7 +3404,8 @@ function App() {
         onNewEntry={openNewEntry}
       />
       <main className="main-content">
-        <Topbar dateTime={dateTime} profile={settings.profile} />
+        <Topbar dateTime={dateTime} profile={profile} onLogout={handleLogOut} />
+        {authError && <p className="entries-error" role="alert">{authError}</p>}
         {isNewEntryPage ? (
           <NewEntryPage
             key={entryToEdit?.id ?? 'new-entry'}
@@ -3314,7 +3427,7 @@ function App() {
         ) : pathname === '/ai-assistant' ? (
           <AIAssistantPage
             onNewEntry={openNewEntry}
-            profileName={settings.profile.name.trim() || 'Hansini'}
+            profileName={user.name}
           />
         ) : pathname === '/settings' ? (
           <SettingsPage
@@ -3330,7 +3443,7 @@ function App() {
           <section className="welcome-section">
             <div className="welcome-copy">
               <span className="eyebrow"><span className="eyebrow-dot" /> YOUR PERSONAL SPACE</span>
-              <h1>A little space for <span>you.</span></h1>
+              <h1>{user.name ? <>Welcome back, <span>{user.name}</span>.</> : 'Welcome back.'}</h1>
               <p>Every thought has a place here. Let&apos;s make today count.</p>
             </div>
             <div className="welcome-decoration" aria-hidden="true">
@@ -3357,19 +3470,24 @@ function App() {
             </div>
           </section>
 
+          {dashboardData.error && <p className="entries-error" role="alert">{dashboardData.error}</p>}
+
           <section className="section-block entries-section" aria-labelledby="entries-title">
             <div className="section-heading">
               <div>
                 <h2 id="entries-title">Recent entries</h2>
                 <p>Your thoughts, moments, and everything in between.</p>
               </div>
-              <button className="text-link" type="button">
+              <button className="text-link" type="button" onClick={() => navigate('/entries')}>
                 View all entries <ArrowUpRight size={15} />
               </button>
             </div>
             <div className="entries-grid">
-              {recentEntries.map((entry) => <EntryCard entry={entry} key={entry.title} />)}
-              <button className="write-prompt-card" type="button">
+              {recentDashboardEntries.map((entry) => <EntryCard entry={entry} key={entry.id} />)}
+              {recentDashboardEntries.length === 0 && (
+                <p className="dashboard-empty-entries">Your diary is ready for its first entry.</p>
+              )}
+              <button className="write-prompt-card" type="button" onClick={() => openNewEntry()}>
                 <span className="prompt-icon"><Plus size={19} /></span>
                 <span className="prompt-title">A thought on your mind?</span>
                 <span className="prompt-description">Take a moment to write it down.</span>

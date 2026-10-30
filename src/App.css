@@ -395,6 +395,18 @@ button {
   font-size: 10px;
 }
 
+.logout-button {
+  margin-left: 1px;
+}
+
+.dashboard-empty-entries {
+  align-self: center;
+  margin: 0;
+  padding: 18px;
+  color: #918c9c;
+  font-size: 12px;
+}
+
 .mobile-brand {
   display: none;
 }

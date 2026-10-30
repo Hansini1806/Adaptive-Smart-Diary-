@@ -1,8 +1,10 @@
+import { getScopedStorageKey } from './accountStorage.js'
+
 const STORAGE_KEY = 'ai-smart-diary.settings'
 
 export const defaultSettings = {
   profile: {
-    name: 'Hansini',
+    name: '',
     email: '',
     bio: '',
   },
@@ -19,7 +21,7 @@ export const defaultSettings = {
 }
 
 function readSettings() {
-  const storedSettings = window.localStorage.getItem(STORAGE_KEY)
+  const storedSettings = window.localStorage.getItem(getScopedStorageKey(STORAGE_KEY))
   if (storedSettings === null) return structuredClone(defaultSettings)
 
   const parsedSettings = JSON.parse(storedSettings)
@@ -70,11 +72,14 @@ export function saveSettings(settings) {
     throw new Error('Theme must be Dark or Light.')
   }
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(savedSettings))
+  window.localStorage.setItem(getScopedStorageKey(STORAGE_KEY), JSON.stringify(savedSettings))
   return savedSettings
 }
 
-export function resetSettings() {
-  window.localStorage.removeItem(STORAGE_KEY)
-  return structuredClone(defaultSettings)
+export function resetSettings(profile = defaultSettings.profile) {
+  window.localStorage.removeItem(getScopedStorageKey(STORAGE_KEY))
+  return {
+    ...structuredClone(defaultSettings),
+    profile: { ...profile },
+  }
 }

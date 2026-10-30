@@ -1,7 +1,9 @@
+import { getScopedStorageKey } from './accountStorage.js'
+
 const STORAGE_KEY = 'ai-smart-diary.entries'
 
 function readEntries() {
-  const storedEntries = window.localStorage.getItem(STORAGE_KEY)
+  const storedEntries = window.localStorage.getItem(getScopedStorageKey(STORAGE_KEY))
   if (storedEntries === null) return []
 
   const entries = JSON.parse(storedEntries)
@@ -13,7 +15,7 @@ function readEntries() {
 }
 
 function writeEntries(entries) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(entries))
+  window.localStorage.setItem(getScopedStorageKey(STORAGE_KEY), JSON.stringify(entries))
 }
 
 function createId() {

@@ -1,7 +1,9 @@
+import { getScopedStorageKey } from './accountStorage.js'
+
 const STORAGE_KEY = 'ai-smart-diary.goals'
 
 function readGoals() {
-  const storedGoals = window.localStorage.getItem(STORAGE_KEY)
+  const storedGoals = window.localStorage.getItem(getScopedStorageKey(STORAGE_KEY))
   if (storedGoals === null) return []
 
   const goals = JSON.parse(storedGoals)
@@ -13,7 +15,7 @@ function readGoals() {
 }
 
 function writeGoals(goals) {
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(goals))
+  window.localStorage.setItem(getScopedStorageKey(STORAGE_KEY), JSON.stringify(goals))
 }
 
 function createId() {
