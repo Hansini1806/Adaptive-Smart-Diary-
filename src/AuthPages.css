@@ -179,6 +179,27 @@
   line-height: 1.5;
 }
 
+.auth-resend {
+  display: block;
+  margin: 16px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #c9a9ff;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.auth-resend:hover:not(:disabled) {
+  color: #e0cbff;
+}
+
+.auth-resend:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
 .auth-switch {
   margin: 21px 0 0;
   color: #9b96a7;

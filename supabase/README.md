@@ -20,7 +20,13 @@ The app is React + Vite, not Next.js, so it uses the Supabase browser client rat
 1. Copy `.env.example` to `.env.local` in the `ai-smart-diary` folder.
 2. Set `VITE_SUPABASE_URL` to your Supabase project URL and `VITE_SUPABASE_PUBLISHABLE_KEY` to its publishable key.
 3. Restart Vite after changing environment variables.
-4. In Supabase **Authentication → URL Configuration**, set the local site URL to `http://localhost:5173` and add your production site URL when deploying.
+4. In Supabase **Authentication → URL Configuration**:
+   - Set **Site URL** to `https://adaptive-smart-diary.vercel.app`.
+   - Add `https://adaptive-smart-diary.vercel.app/auth/callback` and `http://localhost:5173/auth/callback` to **Redirect URLs**. The production URL must be an allowed redirect for signup confirmation and resend links.
+   - If your Vite dev server uses `127.0.0.1` instead of `localhost`, also add `http://127.0.0.1:5173/auth/callback`.
+5. In **Authentication → Email Templates → Confirm signup**, use Supabase's `{{ .ConfirmationURL }}` link. Do not hardcode a localhost URL in the template.
+
+Signup and resend requests explicitly set `emailRedirectTo`. Production uses the deployed Vercel URL (or `VITE_SITE_URL` if set); local development uses the current Vite origin. The `/auth/callback` page processes the Supabase response once, establishes the session, then removes callback tokens and codes from the address bar. Expired or already-used links return the user to login with a resend option.
 
 Vite exposes variables prefixed with `VITE_` to browser code. A publishable key is intended for that use and must be protected by RLS. Never place a service-role key in `.env.local`, any `VITE_` variable, or frontend code.
 

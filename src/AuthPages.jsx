@@ -2,7 +2,15 @@ import { useState } from 'react'
 import { BookOpen, Eye, EyeOff, LockKeyhole, Mail, UserRound } from 'lucide-react'
 import './AuthPages.css'
 
-export default function AuthPages({ mode, onNavigate, onLogin, onSignup, initialError = '' }) {
+export default function AuthPages({
+  mode,
+  onNavigate,
+  onLogin,
+  onSignup,
+  onResendConfirmation,
+  showResendConfirmation = false,
+  initialError = '',
+}) {
   const isSignup = mode === 'signup'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -13,6 +21,10 @@ export default function AuthPages({ mode, onNavigate, onLogin, onSignup, initial
   const [error, setError] = useState(initialError)
   const [success, setSuccess] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [canResendConfirmation, setCanResendConfirmation] = useState(
+    showResendConfirmation || mode !== 'signup',
+  )
+  const [isResending, setIsResending] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -29,6 +41,7 @@ export default function AuthPages({ mode, onNavigate, onLogin, onSignup, initial
         const result = await onSignup({ name, email, password })
         if (result?.needsEmailConfirmation) {
           setSuccess('Your account was created. Check your email to confirm it, then log in.')
+          setCanResendConfirmation(true)
         }
       } else {
         await onLogin({ email, password })
@@ -37,6 +50,31 @@ export default function AuthPages({ mode, onNavigate, onLogin, onSignup, initial
       setError(submitError instanceof Error ? submitError.message : 'Authentication failed. Please try again.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleResendConfirmation = async () => {
+    setError('')
+    setSuccess('')
+    if (!email.trim()) {
+      setError('Enter your email address first so we know where to send the confirmation link.')
+      return
+    }
+
+    setIsResending(true)
+    try {
+      await onResendConfirmation(email)
+      setSuccess('If this address has an unconfirmed account, a new confirmation email is on its way. Check your inbox and spam folder.')
+    } catch (resendError) {
+      const isRateLimited = resendError?.status === 429
+        || resendError?.code === 'over_email_send_rate_limit'
+      setError(isRateLimited
+        ? 'Too many confirmation emails were requested. Please wait a few minutes before trying again.'
+        : resendError instanceof Error
+          ? resendError.message
+          : 'Could not resend the confirmation email. Please try again later.')
+    } finally {
+      setIsResending(false)
     }
   }
 
@@ -148,10 +186,21 @@ export default function AuthPages({ mode, onNavigate, onLogin, onSignup, initial
               </span>
             </label>
           )}
-          <button className="auth-submit" disabled={isSubmitting} type="submit">
+          <button className="auth-submit" disabled={isSubmitting || isResending} type="submit">
             {isSubmitting ? 'Please wait…' : isSignup ? 'Create account' : 'Log in'}
           </button>
         </form>
+
+        {canResendConfirmation && (
+          <button
+            className="auth-resend"
+            disabled={isSubmitting || isResending}
+            onClick={handleResendConfirmation}
+            type="button"
+          >
+            {isResending ? 'Sending confirmation email…' : 'Resend confirmation email'}
+          </button>
+        )}
 
         <p className="auth-switch">
           {isSignup ? 'Already have an account?' : 'New to AI Smart Diary?'}{' '}

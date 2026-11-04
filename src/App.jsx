@@ -3160,6 +3160,7 @@ function PlaceholderPage({ page }) {
 }
 
 function getPathForUser(user, pathname) {
+  if (pathname === '/auth/callback') return pathname
   const isAuthPath = pathname === '/login' || pathname === '/signup'
   return user ? (isAuthPath ? '/' : pathname) : (isAuthPath ? pathname : '/login')
 }
@@ -3169,6 +3170,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [authError, setAuthError] = useState('')
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false)
   const [pathname, setPathname] = useState(window.location.pathname)
   const [entryToEdit, setEntryToEdit] = useState(null)
   const [selectedEntryDate, setSelectedEntryDate] = useState(null)
@@ -3208,10 +3210,11 @@ function App() {
     let unsubscribe
 
     import('./supabaseAuth.js')
-      .then(({ subscribeToAuthChanges }) => {
+      .then(async ({ subscribeToAuthChanges, completeAuthCallback }) => {
         if (cancelled) return
         unsubscribe = subscribeToAuthChanges((authenticatedUser) => {
           setAuthError('')
+          setShowResendConfirmation(false)
           setActiveUserId(authenticatedUser?.id ?? null)
           setUser(authenticatedUser)
           setSettingsState(() => {
@@ -3231,8 +3234,24 @@ function App() {
             window.history.replaceState({}, '', safePath)
             setPathname(safePath)
           }
-          setAuthLoading(false)
+          if (window.location.pathname !== '/auth/callback') setAuthLoading(false)
         })
+
+        const callbackResult = await completeAuthCallback()
+        if (cancelled) return
+        if (!callbackResult) {
+          setAuthLoading(false)
+          return
+        }
+
+        const callbackPath = callbackResult.status === 'success' ? '/' : '/login'
+        if (callbackResult.status === 'error') {
+          setAuthError(callbackResult.message)
+          setShowResendConfirmation(true)
+        }
+        window.history.replaceState({}, '', callbackPath)
+        setPathname(callbackPath)
+        setAuthLoading(false)
       })
       .catch((error) => {
         if (cancelled) return
@@ -3270,6 +3289,10 @@ function App() {
     const { signUp } = await import('./supabaseAuth.js')
     return signUp(details)
   }
+  const handleResendConfirmation = async (email) => {
+    const { resendConfirmationEmail } = await import('./supabaseAuth.js')
+    return resendConfirmationEmail(email)
+  }
   const handleLogIn = async (credentials) => {
     const { logIn } = await import('./supabaseAuth.js')
     return logIn(credentials)
@@ -3294,6 +3317,8 @@ function App() {
         onNavigate={navigate}
         onLogin={handleLogIn}
         onSignup={handleSignUp}
+        onResendConfirmation={handleResendConfirmation}
+        showResendConfirmation={showResendConfirmation}
         initialError={authError}
       />
     )
