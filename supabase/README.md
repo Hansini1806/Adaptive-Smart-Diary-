@@ -28,6 +28,16 @@ The app is React + Vite, not Next.js, so it uses the Supabase browser client rat
 
 Signup and resend requests explicitly set `emailRedirectTo`. Production uses the deployed Vercel URL (or `VITE_SITE_URL` if set); local development uses the current Vite origin. The `/auth/callback` page processes the Supabase response once, establishes the session, then removes callback tokens and codes from the address bar. Expired or already-used links return the user to login with a resend option.
 
+## Vercel single-page app routes
+
+The app uses client-side history navigation rather than React Router. `vercel.json` rewrites direct requests such as `/login`, `/signup`, and `/auth/callback` to the Vite `index.html`, so refreshing those routes and opening email-confirmation links works on Vercel.
+
+## Confirmation email delivery
+
+In Supabase **Authentication → Providers → Email**, verify that email signups and email confirmation are enabled. The source code cannot inspect these project-level settings. Then check **Authentication → Logs** for signup/resend errors.
+
+Supabase's built-in SMTP service is for testing: it only sends to authorized team addresses and has a low project-wide sending limit (currently two messages per hour; Supabase may change it). For real users, configure a custom SMTP provider under **Project Settings → Authentication → SMTP Settings** (or the corresponding SMTP page in the dashboard), verify the sender/domain with that provider, and review its delivery, bounce, and spam logs. Supabase's Auth **Rate Limits** page also controls email sending limits. The app displays signup/resend errors and rate-limit feedback, but successful acceptance by Supabase does not guarantee inbox delivery.
+
 Vite exposes variables prefixed with `VITE_` to browser code. A publishable key is intended for that use and must be protected by RLS. Never place a service-role key in `.env.local`, any `VITE_` variable, or frontend code.
 
 The current frontend uses Supabase for authentication only. Diary entries, goals, and settings remain in browser `localStorage` until the API/database integration and a deliberate data import are implemented.

@@ -125,6 +125,11 @@ export async function logIn({ email, password }) {
     password,
   })
 
+  if (error?.code === 'email_not_confirmed') {
+    throw new Error(
+      'Please confirm your email before logging in. Check your inbox or use the resend confirmation option below.',
+    )
+  }
   if (error) throw error
 }
 
